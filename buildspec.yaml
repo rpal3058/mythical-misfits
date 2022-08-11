@@ -15,4 +15,4 @@ phases:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push https://hub.docker.com/rwijupal3058/mythicalmisfits:v1
+      - docker push rwijupal3058/mythicalmisfits:v1
