@@ -9,9 +9,9 @@ phases:
     commands:
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t rwijupal3058/mythicalmisfits:latest .
+      - docker build -t rwijupal3058/mythicalmisfits:v1 .
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push rwijupal3058/mythicalmisfits:latest
+      - docker push rwijupal3058/mythicalmisfits:v1
