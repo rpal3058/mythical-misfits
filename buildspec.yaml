@@ -7,11 +7,12 @@ phases:
       - docker login --username $DOCKERHUB_USERNAME --password $DOCKERHUB_PASS
   build:
     commands:
+      # look at this if there is docker deamon error when building docker imagehttps://docs.aws.amazon.com/codebuild/latest/userguide/troubleshooting.html#troubleshooting-cannot-connect-to-docker-daemon
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t rwijupal3058/mythicalmisfits:v1 ./app
+      - docker build -t https://hub.docker.com/rwijupal3058/mythicalmisfits:v1 ./app
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push rwijupal3058/mythicalmisfits:v1
+      - docker push https://hub.docker.com/rwijupal3058/mythicalmisfits:v1
