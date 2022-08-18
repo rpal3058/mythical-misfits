@@ -22,7 +22,7 @@ phases:
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
       # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
-      - printf '[{"name":"MythicalMisfits","imageUri":"%s"}]' $hub.docker.com/repository/docker/rwijupal3058/mythicalmisfits:v1 > imagedefinitions.json
+      - printf '[{"name":"MythicalMisfits","imageUri":"hub.docker.com/repository/docker/rwijupal3058/mythicalmisfits"}]' > imagedefinitions.json
 artifacts:
   files: 
   #   - 'image*.json'
