@@ -21,10 +21,21 @@ phases:
       # Create a artifacts file that contains the name and location of the image
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
-      # NOTE: make sure the name here is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
-      - printf '[{"name":"MythicalMisfits","imageUri":"%s"}]' $https://hub.docker.com/repository/docker/rwijupal3058/mythicalmisfits:v1 > imagedefinitions.json
+      # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
+      - printf '[{"name":"MythicalMisfits","imageUri":"%s"}]' $hub.docker.com/repository/docker/rwijupal3058/mythicalmisfits:v1 > imagedefinitions.json
 artifacts:
-  # Indicate that the created imagedefinitions.json file created on the previous
-  # line is to be referenceable as an artifact of the build execution job.
-  files: imagedefinitions.json
+  files: 
+  #   - 'image*.json'
+  #   - 'appspec.yaml'
+  #   - 'taskdef.json'
+  # secondary-artifacts:
+  #   DefinitionArtifact:
+  #     files:
+  #       - appspec.yaml
+  #       - taskdef.json
+  # # Indicate that the created imagedefinitions.json file created on the previous
+  # # line is to be referenceable as an artifact of the build execution job.
+  #   ImageArtifact:
+  #     files:
+    - imagedefinitions.json      
 
