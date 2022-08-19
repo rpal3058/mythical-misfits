@@ -24,11 +24,11 @@ phases:
       # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
       # IMAGE: 
       # Rolling update - 
-
       # - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:v1"}]' > imagedefinitions.json
       #Bluegreen - 
       # https://docs.aws.amazon.com/codepipeline/latest/userguide/file-reference.html#file-reference-ecs-bluegreen
-      - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:v1"}]' > imageDetails.json 
+      - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:v1"}]' > imageDetail.json 
+
 # Rolling deployment
 # artifacts:
 #   # Indicate that the created imagedefinitions.json file created on the previous
@@ -39,7 +39,7 @@ phases:
 # Blue Green Deployment
 artifacts:
   files: 
-    - 'imageDetails.json'
+    - 'image*.json'
     - 'appspec.yaml'
     - 'taskdef.json'
   secondary-artifacts:
@@ -47,3 +47,6 @@ artifacts:
       files:
         - appspec.yaml
         - taskdef.json
+    ImageArtifact:
+      files:
+        - imageDetail.json    
