@@ -22,19 +22,7 @@ phases:
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
       # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
-      # IMAGE: 
-      # Rolling update - 
-      # - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:v1"}]' > imagedefinitions.json
-      #Bluegreen - 
-      # https://docs.aws.amazon.com/codepipeline/latest/userguide/file-reference.html#file-reference-ecs-bluegreen
       - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:v1"}]' > imageDetail.json 
-
-# Rolling deployment
-# artifacts:
-#   # Indicate that the created imagedefinitions.json file created on the previous
-#   # line is to be referenceable as an artifact of the build execution job.
-#   files: imagedefinitions.json
-
 
 # Blue Green Deployment
 artifacts:
