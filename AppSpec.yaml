@@ -3,7 +3,7 @@ Resources:
   - TargetService:
       Type: AWS::ECS::Service
       Properties:
-        TaskDefinition: "arn:aws:iam::422709438327:role/ecsTaskExecutionRole"
+        TaskDefinition: "arn:aws:ecs:ap-south-1:422709438327:task-definition/MythicalMisfits:3"
         LoadBalancerInfo:
           ContainerName: "MythicalMisfits"
           ContainerPort: 8080
