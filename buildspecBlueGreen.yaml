@@ -26,10 +26,12 @@ phases:
 
 # Blue Green Deployment
 artifacts:
+# Defining the files that need to converted to an artifact
   files: 
     - 'imageDetail.json'
     - 'appspec.yaml'
     - 'taskdef.json'
+# Actual artifactst that will be created
   secondary-artifacts:
     DefinitionArtifact:
       files:
