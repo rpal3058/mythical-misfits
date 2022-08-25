@@ -27,7 +27,7 @@ phases:
 # Blue Green Deployment
 artifacts:
   files: 
-    - 'imageDetail.json'
+    - 'image*.json'
     - 'appspec.yaml'
     - 'taskdef.json'
   secondary-artifacts:
