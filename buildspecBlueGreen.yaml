@@ -11,18 +11,19 @@ phases:
       #  make sure the CodeBuild runs in priveldged mode (look at Envirement -> Overide Image -> Priveldged)
       - echo Build started on `date`
       - echo Building the Docker image...
-      - docker build -t rwijupal3058/mythicalmisfits:v1 ./app
+      - docker build -t rwijupal3058/mythicalmisfits:latest ./app
   post_build:
     commands:
       - echo Build completed on `date`
       - echo Pushing the Docker image...
-      - docker push rwijupal3058/mythicalmisfits:v1
+      - docker push rwijupal3058/mythicalmisfits:latest
       - echo Completed pushing Docker image. Deploying Docker image to AWS Fargate on `date`
       # Create a artifacts file that contains the name and location of the image
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
       # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
-      - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:v1"}]' > imageDetail.json 
+      - printf '[{"name":"MythicalMisfits","ImageURI":"rwijupal3058/mythicalmisfits:latest"}]' > imageDetail.json 
+      
 
 # Blue Green Deployment
 artifacts:

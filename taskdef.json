@@ -64,7 +64,7 @@
     "EC2",
     "FARGATE"
   ],
-  "taskDefinitionArn": "<TASK_DEFINITION>",
+  "taskDefinitionArn": "arn:aws:ecs:ap-south-1:422709438327:task-definition/MythicalMisfits:3",
   "family": "MythicalMisfits",
   "requiresAttributes": [
     {
