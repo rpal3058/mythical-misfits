@@ -22,7 +22,7 @@ phases:
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
       # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
-      - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:latest"}]' > imageDetail.json 
+      - printf '{"ImageURI":"rwijupal3058/mythicalmisfits:latest"}' > imageDetail.json 
       
 
 # Blue Green Deployment
