@@ -22,13 +22,14 @@ phases:
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
       # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
-      - printf '[{"ImageURI":"rwijupal3058/mythicalmisfits:latest"}]' > imageDetail.json       
+      - printf '[{"name":"MythicalMisfits","imageUri":"rwijupal3058/mythicalmisfits:latest"}]' > imageDetail.json 
+      
 
 # Blue Green Deployment
 artifacts:
 # Defining the files that need to converted to an artifact
   files: 
-    - 'imageDetail.json'
+    - 'image*.json'
     - 'appspec.yaml'
     - 'taskdef.json'
 # Actual artifactst that will be created
