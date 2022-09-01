@@ -21,7 +21,7 @@ phases:
       # Create a artifacts file that contains the name and location of the image
       # pushed to ECR. This will be used by AWS CodePipeline to automate
       # deployment of this specific container to Amazon ECS.
-      # NOTE: make sure the "name" below is that of CONTAINER NAME available in TASK DEFINITION JSON in ECS
+      # NOTE: Important refer https://docs.aws.amazon.com/codepipeline/latest/userguide/file-reference.html#file-reference-ecs-bluegreen
       - printf '{"ImageURI":"rwijupal3058/mythicalmisfits:latest"}' > imageDetail.json 
       
 
