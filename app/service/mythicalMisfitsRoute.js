@@ -1,11 +1,11 @@
 const express = require('express');
 
-const userActions = require('./mythicalMisfitsAction.js');
+const misfitsActions = require('./mythicalMisfitsAction.js');
 
 const router = express.Router();
 
-router.post('/', userActions.healthCheck);
+router.get('/', misfitsActions.healthCheck);
 
-router.post('/mysfits', userActions.getMisfits);
+router.get('/misfits', misfitsActions.getMisfits);
 
 module.exports = router;

@@ -1,18 +1,19 @@
-FROM --platform=linux/amd64 ubuntu:latest
+FROM --platform=linux/x86-64 node:14-alpine
 
-RUN echo Updating existing packages, installing and upgrading python and pip.
-RUN apt-get update -y
-RUN apt-get install -y python3-pip python3-dev build-essential
-RUN pip3 install --upgrade pip
-RUN pip install Jinja2==3.0.3
+RUN echo Moving into MythicalMisfitsService Folder ..
+WORKDIR /MythicalMisfitsService
 
-RUN echo Copying the Mythical Mysfits Flask service into a service directory.
-COPY ./service /MythicalMysfitsService
-WORKDIR /MythicalMysfitsService
+RUN echo Copy the package json into MythicalMisfitsService Folder ..
+COPY package.json ./ 
 
-RUN echo Installing Python packages listed in requirements.txt
-RUN pip3 install -r ./requirements.txt
+RUN echo Install dependencies...
+RUN npm install
 
-RUN echo Starting python and starting the Flask service...
-ENTRYPOINT ["python3"]
-CMD ["mythicalMysfitsService.py"]
+RUN echo Copying the Mythical Misfits director into a service directory of the image.
+COPY . .
+
+EXPOSE 3000
+
+CMD [ "npm", "start" ]
+
+

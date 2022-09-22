@@ -1,7 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 
-const userRoutes = require('./mythicalMisfitsRoute.js');
+const userRoutes = require('./service/mythicalMisfitsRoute.js');
 
 const app = express();
 
@@ -27,3 +27,5 @@ app.use((err, req, res, next) => {
   }
   res.status(code).json({ message: message });
 });
+
+app.listen(3000);

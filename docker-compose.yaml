@@ -1,0 +1,66 @@
+version: '3.8'
+services:
+  dynamodb-local:
+    command: "-jar DynamoDBLocal.jar -sharedDb -dbPath ./data"
+    image: "amazon/dynamodb-local:latest"
+    container_name: dynamodb-local
+    ports:
+      - "8000:8000"
+    volumes:
+# because of this volume an empty folder for docker/dynamodb will be creates
+      - "./docker/dynamodb:/home/dynamodblocal/data"
+    working_dir: /home/dynamodblocal
+
+
+  misfits-db:
+    build: 
+      dockerfile: Dockerfile
+      context: ./app
+    container_name: app-db
+    ports:
+       - '3000:3000'
+    depends_on:
+      - "dynamodb-local"
+    links:
+      - "dynamodb-local"
+    environment:
+      AWS_ACCESS_KEY_ID: process.env.AWS_ACCESS_KEY_ID
+      AWS_SECRET_ACCESS_KEY: process.env.AWS_SECRET_ACCESS_KEY
+      REGION: process.env.REGION
+    volumes:
+# because of this volume an empty folder for node_modules will be creates
+      - /MythicalMisfitsService/node_modules
+# because of this volume if you make any changes to the app it will reflect on the docker container istanttaneously
+      - ./app:/MythicalMisfitsService
+  
+  
+  misfits-web:
+    build: 
+      dockerfile: Dockerfile
+      context: ./web
+    container_name: app-web
+    ports:
+       - '80:80'
+    depends_on: 
+      - "misfits-db"
+    links:
+      - "misfits-db"
+  
+
+      
+
+
+
+# https://medium.com/platform-engineer/running-aws-dynamodb-local-with-docker-compose-6f75850aba1e
+# Command to create the dynamoDB table
+# aws dynamodb create-table --cli-input-json --endpoint-url http://localhost:8000 file://./aws-modern-application-workshop/module-3/aws-cli/dynamodb-table.json
+
+# Command to create the add values to dynamoDB table
+# aws dynamodb batch-write-item --request-items --endpoint-url http://localhost:8000 file://./aws-modern-application-workshop/module-3/aws-cli/populate-dynamodb.json
+
+#List table
+# aws dynamodb list-tables --endpoint-url http://localhost:8000
+
+#Starting DyanmoDB Admin GUI
+# DYNAMO_ENDPOINT=http://localhost:8000 dynamodb-admin
+# visit http://localhost:8001 on your web browser to access the dynamodb-admin GUI.

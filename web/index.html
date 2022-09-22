@@ -19,7 +19,8 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
   </head>
-  <body ng-app="mysfitsApp" style="background-color:#EBEBEB">
+
+  <body ng-app="misfitsApp" style="background-color:#EBEBEB">
     <style>
       @media (max-width: 800px) {
       	img {
@@ -27,10 +28,13 @@
       	}
       }
     </style>
+    
     <br>
+    
     <div style="text-align: center">
       <img src="https://www.mythicalmysfits.com/images/mysfits_banner.gif" width="800px" align="center">
     </div>
+    
     <div class="container" ng-controller="mysfitsFilterController">
       <div id="filterMenu">
         <ul class="nav nav-pills">
@@ -48,25 +52,28 @@
         </ul>
       </div>
     </div>
+
     <br>
+
     <div class="container">
-      <div id="mysfitsGrid" class="row" ng-controller="mysfitsListController">
-          <div class="col-md-4 border border-warning" ng-repeat="mysfit in mysfits">
+      <div id="mysfitsGrid" class="row" ng-controller="misfitsListController">
+          <!-- misfits below is from the $scope -->
+          <div class="col-md-4 border border-warning" ng-repeat="misfit in misfits"> 
               <br>
               <p align="center">
-                <strong> {{mysfit.name}}</strong>
+                <strong> {{misfit.name}}</strong>
                 <br>
-                <img src="{{mysfit.thumbImageUri}}" alt="{{mysfit.Name}}">
+                <img src="{{misfit.thumbImageUri}}" alt="{{misfit.name}}">
               </p>
               <p>
                 <br>
-                <b>Species:</b> {{mysfit.species}}
+                <b>Species:</b> {{misfit.species}}
                 <br>
-                <b>Age:</b> {{mysfit.age}}
+                <b>Age:</b> {{misfit.age}}
                 <br>
-                <b>Good/Evil:</b> {{mysfit.goodevil}}
+                <b>Good/Evil:</b> {{misfit.goodevil}}
                 <br>
-                <b>Lawful/Chaotic:</b> {{mysfit.lawchaos}}
+                <b>Lawful/Chaotic:</b> {{misfit.lawchaos}}
               </p>
           </div>
         </div>
@@ -77,23 +84,37 @@
       &nbsp;&nbsp;This site was created for use in the AWS Modern Application Workshop. <a href="https://github.com/aws-samples/aws-modern-application-workshop">Please see details here.</a>
     </p>
   </body>
+
   <script>
+  var gridScope;
+  var filterScope;
+  /* For Production deployment */ 
+  var mysfitsApiEndpoint = 'https://mysfitsapiendpoint.mydevop.co.in'; // example: 'http://mythi-publi-abcd12345-01234567890123.elb.us-east-1.amazonaws.com'
 
-    var mysfitsApiEndpoint = 'https://mysfitsapiendpoint.mydevop.co.in'; // example: 'http://mythi-publi-abcd12345-01234567890123.elb.us-east-1.amazonaws.com'
+  /* For Local Deployment */  
+  // var mysfitsApiEndpoint = 'http://localhost:3000' //we are using localhost instead of the container name because the app is running on the web browser (which is external to the network) and not in a container (refer https://www.udemy.com/course/docker-kubernetes-the-practical-guide/learn/lecture/22167026#notes)
 
-    var app = angular.module('mysfitsApp', []);
+  var app = angular.module('misfitsApp', []);
 
-    var gridScope;
+  /* Populate the main misfit grid on page load. */
+  /* This is the first function that is being called by the HTML body*/
+  app.controller('misfitsListController', function($scope) {
+    gridScope = $scope;
+    getAllMisfits(applyGridScope); //will get all the misfits and will Add the updated list of misfits to the $scope 
+  });
 
-    var filterScope;
+  /* Clears the filter */
+  app.controller('clearFilterController', function($scope) {});
 
-    app.controller('clearFilterController', function($scope) {
-    });
+  /* Add the updated list of misfits to the $scope */
+  function applyGridScope(misfitsList) {
+    gridScope.misfits = misfitsList;
+    gridScope.$apply();
+  }
 
-    app.controller('mysfitsFilterController', function($scope) {
-
+  /* Populate the main mysfit grid with the filter selected. */
+  app.controller('mysfitsFilterController', function($scope) {
       filterScope = $scope;
-
       // The possible options for Mysfits to populate the dropdown filters.
       $scope.filterOptionsList =
        {
@@ -121,80 +142,57 @@
           The View All button has been selected, retrieve all the mysfits.
       */
        $scope.removeFilter = function() {
-         allMysfits = getAllMysfits(applyGridScope);
+        getAllMisfits(applyGridScope);
        }
 
-       /*
-         This API hasn't been implemented on the service backend yet. You will
-         implement it during module 3!
-       */
        $scope.queryMysfits = function(filterCategory, filterValue) {
-
-           var filterCategoryQS = "";
-           if (filterCategory==="Good/Evil") {
-             filterCategoryQS = "GoodEvil";
-           } else {
-             filterCategoryQS = "LawChaos"
-           }
-           var mysfitsApi = mysfitsApiEndpoint + '/mysfits?' + 'filter=' + filterCategoryQS + "&value=" + filterValue;
-
-           $.ajax({
-             url : mysfitsApi,
-             type : 'GET',
-             success : function(response) {
-               applyGridScope(response.mysfits)
-             },
-             error : function(response) {
-               console.log("could not retrieve mysfits list.");
-               console.log(response.message);
-             }
-           });
+        getFilteredMisfits(filterCategory, filterValue)
        }
-
-
-
     });
 
-    /*
-      Populate the main mysfit grid on page load.
-    */
-    app.controller('mysfitsListController', function($scope) {
 
-      gridScope = $scope;
-
-      getAllMysfits(applyGridScope);
-
+  /* Retrieve the full list of mysfits from the backend service API. */
+  function getAllMisfits(applyGridScope) {
+    var mysfitsApi = mysfitsApiEndpoint + '/misfits';
+    $.ajax({
+      url : mysfitsApi,
+      type : 'GET',
+      success : function(response) {
+          console.log("FETCHED ALL LIST")
+          var misfitsList = response.results
+          applyGridScope(misfitsList);            
+        // });
+      },
+      error : function(response) {
+        console.log("could not retrieve misfits list.");
+        console.log(response.message);
+      }
     });
+  }
 
-    /*
-      Reload the grid of mysfits whenever a new list is retrieved based
-      on the filters selected.
-    */
-    function applyGridScope(mysfitsList) {
-      gridScope.mysfits = mysfitsList;
-      gridScope.$apply();
+  /* Retrieve the FILTERED list of mysfits from the backend service API. */
+  function getFilteredMisfits(filterCategory, filterValue){
+    var filterCategoryQS = "";
+    if (filterCategory==="Good/Evil") {
+      filterCategoryQS = "GoodEvil";
+    } else {
+      filterCategoryQS = "LawChaos"
     }
+    var mysfitsApi = mysfitsApiEndpoint + '/misfits?' + 'filter=' + filterCategoryQS + "&value=" + filterValue;
 
-    /*
-      Retrieve the full list of mysfits from the backend service API.
-    */
-    function getAllMysfits(callback) {
-
-      var mysfitsApi = mysfitsApiEndpoint + '/mysfits';
-
-      $.ajax({
-        url : mysfitsApi,
-        type : 'GET',
-        success : function(response) {
-          callback(response.mysfits);
-        },
-        error : function(response) {
-          console.log("could not retrieve mysfits list.");
-          console.log(response.message);
-        }
-      });
-    }
-
-
+    $.ajax({
+      url : mysfitsApi,
+      type : 'GET',
+      success : function(response) {
+        console.log("FETCHED FILTERED LIST")
+        var misfitsList = response.results
+        applyGridScope(misfitsList)
+      },
+      error : function(response) {
+        console.log("could not retrieve mysfits list.");
+        console.log(response.message);
+      }
+    });
+  }
   </script>
 </html>
